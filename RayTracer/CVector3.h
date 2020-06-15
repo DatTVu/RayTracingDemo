@@ -18,7 +18,7 @@ public:
 
 	T z() const { return m_data[2]; }
 
-	CVector3 operator-() const { return CVector4(-m_data[0], -m_data[1], -m_data[2]); }
+	CVector3 operator-() const { return CVector3(-m_data[0], -m_data[1], -m_data[2]); }
 
 	T operator[](int i) const 
 	{

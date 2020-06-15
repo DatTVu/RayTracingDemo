@@ -8,6 +8,7 @@ using Color3d = CVector3<double>;
 using Point3d = CVector3<double>;
 using Vec3d = CVector3<double>;
 using Ray3d = CRay<double>;
+
 double IsHitSphere(const Point3d& center, double radius, const Ray3d& ray);
 Color3d GetRayColor(const Ray3d& ray);
 
@@ -27,14 +28,14 @@ Color3d GetRayColor(const Ray3d& ray)
 double IsHitSphere(const Point3d& center, double radius, const Ray3d& ray)
 {
     Vec3d distance_ = ray.GetOrigin() - center;
-    double a = dot(ray.GetDirection(), ray.GetDirection());
-    double b = 2.0 * dot(distance_, ray.GetDirection());
-    double c = dot(distance_, distance_) - radius* radius;
-    double delta_ = b * b - 4.0*a*c;
+    double a = ray.GetDirection().length_squared();
+    double half_b = dot(distance_, ray.GetDirection());
+    double c = distance_.length_squared() - radius* radius;
+    double delta_ = half_b * half_b - a*c;
     double result_ = -1.0f;
     if (delta_ >= -0.0)
     {
-        result_ = (-b - std::sqrt(delta_)) / (2.0 * a);
+        result_ = (-half_b - std::sqrt(delta_)) / a;
     }
     return result_;
 }

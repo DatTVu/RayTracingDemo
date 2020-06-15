@@ -1,5 +1,6 @@
 #pragma once
 #include "CVector3.h"
+
 template<typename T>
 inline std::ostream& operator<<(std::ostream& out, const CVector3<T>& vec)
 {
