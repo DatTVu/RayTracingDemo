@@ -8,33 +8,39 @@ using Color3d = CVector3<double>;
 using Point3d = CVector3<double>;
 using Vec3d = CVector3<double>;
 using Ray3d = CRay<double>;
-bool IsHitSphere(const Point3d& center, double radius, const Ray3d& ray);
+double IsHitSphere(const Point3d& center, double radius, const Ray3d& ray);
 Color3d GetRayColor(const Ray3d& ray);
 
 Color3d GetRayColor(const Ray3d& ray)
 {
-    bool isHit = IsHitSphere(Point3d(0.0, 0.0, -1.0), 0.5, ray);
-    if (isHit)
+    double t = IsHitSphere(Point3d(0.0, 0.0, -1.0), 0.5, ray);
+    if (t > 0.0)
     {
-        return Color3d(1.0, 0.0, 0.0);
+        Vec3d vecNormal_ = unitvec(ray.GetPointAt(t) - Vec3d(0.0, 0.0, -1.0));
+        return 0.5*Color3d(vecNormal_.x() + 1.0, vecNormal_.y() + 1.0, vecNormal_.z() + 1.0);
     }
     Vec3d unit_direction = unitvec(ray.GetDirection());
-    double t = 0.5 * (unit_direction.y() + 1.0);
+    t = 0.5 * (unit_direction.y() + 1.0);
     return (1.0 - t) * Color3d(1.0, 1.0, 1.0) + t * Color3d(0.5, 0.7, 1.0);
 }
 
-bool IsHitSphere(const Point3d& center, double radius, const Ray3d& ray)
+double IsHitSphere(const Point3d& center, double radius, const Ray3d& ray)
 {
     Vec3d distance_ = ray.GetOrigin() - center;
     double a = dot(ray.GetDirection(), ray.GetDirection());
     double b = 2.0 * dot(distance_, ray.GetDirection());
     double c = dot(distance_, distance_) - radius* radius;
     double delta_ = b * b - 4.0*a*c;
-    bool isHit_ = (delta_ > 0);
-    return isHit_;
+    double result_ = -1.0f;
+    if (delta_ >= -0.0)
+    {
+        result_ = (-b - std::sqrt(delta_)) / (2.0 * a);
+    }
+    return result_;
 }
 
-int main() {
+int main() 
+{
     const double kAspectRatio = 16.0 / 9.0;
     const int kImageWidth = 384;
     const int kImageHeight = static_cast<int> (kImageWidth / kAspectRatio);
